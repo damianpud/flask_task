@@ -1,15 +1,11 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_bootstrap import Bootstrap
 
+from first_app.views import main_blueprint
+
 app = Flask(__name__)
+app.register_blueprint(main_blueprint)
 Bootstrap(app)
-
-
-@app.route('/')
-def hello_flask():
-    return render_template(
-        'hello.html'
-    )
 
 
 if __name__ == '__main__':
