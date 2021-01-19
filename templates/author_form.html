@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content_main %}
+
+  <form method="POST">
+
+    {{ form.csrf_token }}
+
+    <div class="form-group">
+      {{ form.name.label }}
+      <input
+        class="form-control{% if form.name.errors %} is-invalid{% endif %}"
+        name="name" id="name" value="{{ form.name.data or '' }}"
+      >
+      {% for error in form.name.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="form-group">
+      {{ form.surname.label }}
+      <input
+        class="form-control{% if form.surname.errors %} is-invalid{% endif %}"
+        name="surname" id="surname" value="{{ form.surname.data or '' }}"
+      >
+      {% for error in form.surname.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
+    </div>
+
+    <input type="submit" class="btn btn-primary" name="Add">
+  </form>
+
+{% endblock %}

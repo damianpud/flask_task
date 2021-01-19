@@ -14,6 +14,14 @@
           <a class="nav-item nav-link active" href="{{ url_for('main.categories') }}">
             Categories
           </a>
+          <div class="nav-item dropdown">
+              <a class="nav-link active dropdown-toggle" href="#" data-toggle="dropdown">
+                Create
+              </a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="{{ url_for('main.author_create') }}">Add Author</a>
+              </div>
+          </div>
         </div>
       </div>
     </div>
