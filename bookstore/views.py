@@ -28,3 +28,23 @@ def author_create():
     models.db.session.add(author)
     models.db.session.commit()
     return redirect(url_for('main.books'))
+
+
+@main_blueprint.route('/create/book', methods=['GET', 'POST'])
+def book_create():
+    form = forms.BookForm()
+    if not form.validate_on_submit():
+        return render_template('book_form.html', form=form)
+    book = models.Book(
+        title=form.title.data,
+        author_id=form.author.data,
+        category_id=form.category.data,
+        rating=form.rating.data,
+        publish_date=form.publish_date.data,
+        price=form.price.data,
+        type=form.type.data,
+        description=form.description.data
+    )
+    models.db.session.add(book)
+    models.db.session.commit()
+    return redirect(url_for('main.books'))

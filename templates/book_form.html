@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content_main %}
+
+  <form method="POST">
+
+    {{ form.csrf_token }}
+
+      <div class="form-group">
+        {{ form.title.label }}
+        <input
+        class="form-control{% if form.title.errors %} is-invalid{% endif %}"
+        name="title" id="title" value="{{ form.title.data or '' }}"
+        >
+      </div>
+
+      <div class="form-group">
+        {{ form.author.label }}
+        <select
+        class="custom-select{% if form.author.errors %} is-invalid{% endif %}"
+        name="author" id="author"
+        >
+          {% for choice_id, choice_concat_1 in form.author.choices %}
+            <option
+              value="{{ choice_id }}"
+              {% if form.author.data | int == choice_id %}selected{% endif %}
+            >{{ choice_concat_1 }}</option>
+          {% endfor %}
+        </select>
+        {% for error in form.author.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.category.label }}
+        <select
+        class="custom-select{% if form.category.errors %} is-invalid{% endif %}"
+        name="category" id="category"
+        >
+        {% for choice_id, choice_name in form.category.choices %}
+          <option
+            value="{{ choice_id }}"
+            {% if form.category.data | int == choice_id %}selected{% endif %}
+          >{{ choice_name }}</option>
+        {% endfor %}
+      </select>
+      </div>
+
+      <div class="form-group">
+        {{ form.rating.label }}
+        <input
+        class="form-control{% if form.rating.errors %} is-invalid{% endif %}"
+        name="rating" id="rating" type="number" value="{{ form.rating.data or '' }}"
+        >
+      </div>
+
+      <div class="form-group">
+        {{ form.publish_date.label }}
+        <input
+        class="form-control{% if form.publish_date.errors %} is-invalid{% endif %}"
+        name="publish_date" id="publish_date" type="date" value="{{ form.publish_date.data or '' }}"
+        >
+      </div>
+
+      <div class="form-group">
+        {{ form.price.label }}
+        <input
+        class="form-control{% if form.price.errors %} is-invalid{% endif %}"
+        name="price" id="price" value="{{ form.price.data or '' }}"
+        >
+      </div>
+
+      <div class="form-group">
+        {{ form.type.label }}
+        <select
+        class="custom-select{% if form.type.errors %} is-invalid{% endif %}"
+        name="type" id="type">
+          {% for choice in form.type.choices %}
+            <option
+            value="{{ choice }}"
+            >{{ choice }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        {{ form.description.label }}
+        <input
+        class="form-control{% if form.description.errors %} is-invalid{% endif %}"
+        name="description" id="description" value="{{ form.description.data or '' }}"
+        >
+      </div>
+
+    <input type="submit" class="btn btn-primary" name="Add">
+
+  </form>
+
+{% endblock %}

@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
+from sqlalchemy.sql.functions import concat
 
 from flask_sqlalchemy import SQLAlchemy
 
