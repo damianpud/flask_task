@@ -48,3 +48,22 @@ def book_create():
     models.db.session.add(book)
     models.db.session.commit()
     return redirect(url_for('main.books'))
+
+
+@main_blueprint.route('/update/book/<book_id>', methods=['GET', 'POST'])
+def book_update(book_id):
+    book = models.Book.query.get(book_id)
+    form = forms.BookForm(obj=book)
+    if not form.validate_on_submit():
+        return render_template('book_form.html', form=form)
+    book.title = form.title.data,
+    book.author_id = form.author.data,
+    book.category_id = form.category.data,
+    book.rating = form.rating.data,
+    book.publish_date = form.publish_date.data,
+    book.price = form.price.data,
+    book.type = form.type.data,
+    book.description = form.description.data
+    models.db.session.add(book)
+    models.db.session.commit()
+    return redirect(url_for('main.books'))
