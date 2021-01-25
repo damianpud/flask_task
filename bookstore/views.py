@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
+from flask_wtf import FlaskForm
 
 from bookstore import models
 from bookstore import forms
@@ -65,5 +66,17 @@ def book_update(book_id):
     book.type = form.type.data
     book.description = form.description.data
     models.db.session.add(book)
+    models.db.session.commit()
+    return redirect(url_for('main.books'))
+
+
+@main_blueprint.route('/delete/book/<book_id>', methods=['GET', 'POST'])
+def movie_delete(book_id):
+    book = models.Book.query.get(book_id)
+    form = FlaskForm()
+    if not form.validate_on_submit():
+        context = {'form': form, 'title': book.title}
+        return render_template('book_delete.html', **context)
+    models.db.session.delete(book)
     models.db.session.commit()
     return redirect(url_for('main.books'))
