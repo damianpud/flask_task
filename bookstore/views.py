@@ -71,7 +71,7 @@ def book_update(book_id):
 
 
 @main_blueprint.route('/delete/book/<book_id>', methods=['GET', 'POST'])
-def movie_delete(book_id):
+def book_delete(book_id):
     book = models.Book.query.get(book_id)
     form = FlaskForm()
     if not form.validate_on_submit():
