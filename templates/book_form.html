@@ -12,6 +12,9 @@
         class="form-control{% if form.title.errors %} is-invalid{% endif %}"
         name="title" id="title" value="{{ form.title.data or '' }}"
         >
+        {% for error in form.title.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
       </div>
 
       <div class="form-group">
@@ -45,6 +48,9 @@
           >{{ choice_name }}</option>
         {% endfor %}
       </select>
+      {% for error in form.category.errors %}
+        <div class="invalid-feedback">{{ error }}</div>
+      {% endfor %}
       </div>
 
       <div class="form-group">
@@ -53,6 +59,9 @@
         class="form-control{% if form.rating.errors %} is-invalid{% endif %}"
         name="rating" id="rating" type="number" value="{{ form.rating.data or '' }}"
         >
+        {% for error in form.rating.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
       </div>
 
       <div class="form-group">
@@ -61,6 +70,9 @@
         class="form-control{% if form.publish_date.errors %} is-invalid{% endif %}"
         name="publish_date" id="publish_date" type="date" value="{{ form.publish_date.data or '' }}"
         >
+        {% for error in form.publish_date.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
       </div>
 
       <div class="form-group">
@@ -69,6 +81,9 @@
         class="form-control{% if form.price.errors %} is-invalid{% endif %}"
         name="price" id="price" value="{{ form.price.data or '' }}"
         >
+        {% for error in form.price.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
       </div>
 
       <div class="form-group">
@@ -82,6 +97,9 @@
             >{{ choice }}</option>
           {% endfor %}
         </select>
+        {% for error in form.type.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
       </div>
 
       <div class="form-group">
@@ -90,6 +108,9 @@
         class="form-control{% if form.description.errors %} is-invalid{% endif %}"
         name="description" id="description" value="{{ form.description.data or '' }}"
         >
+        {% for error in form.description.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
       </div>
 
     <input type="submit" class="btn btn-primary" name="Add">
