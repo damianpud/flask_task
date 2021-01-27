@@ -3,7 +3,7 @@ from datetime import date
 from flask_wtf import FlaskForm
 from flask_wtf.form import _Auto
 from wtforms import (
-    DateField, IntegerField, SelectField, StringField, ValidationError, SubmitField, TextAreaField
+    DateField, IntegerField, SelectField, StringField, ValidationError, SubmitField, TextAreaField, PasswordField
 )
 from wtforms.validators import DataRequired, Length, NumberRange
 
@@ -31,3 +31,8 @@ class BookForm(FlaskForm):
     price = IntegerField(validators=[DataRequired()])
     type = SelectField(choices=['Hardcover', 'Paperback'], validators=[DataRequired()])
     description = TextAreaField()
+
+
+class LoginForm(FlaskForm):
+    email = StringField("Email", validators=[Length(min=7, max=50), DataRequired(message="Please Fill This Field")])
+    password = PasswordField("Password", validators=[DataRequired(message="Please Fill This Field")])
