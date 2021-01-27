@@ -37,5 +37,12 @@ class Author(db.Model):
     author_books = relationship('Book', back_populates='author')
 
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(256), unique=True)
+
+
 engine = create_engine('sqlite:///db.sqlite3')
 Session = sessionmaker(autoflush=False, bind=engine)
