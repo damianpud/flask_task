@@ -5,7 +5,7 @@ from flask_wtf.form import _Auto
 from wtforms import (
     DateField, IntegerField, SelectField, StringField, ValidationError, SubmitField, TextAreaField, PasswordField
 )
-from wtforms.validators import DataRequired, Length, NumberRange
+from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 
 from bookstore.models import Author, Category, Book
 
@@ -36,3 +36,14 @@ class BookForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[Length(min=7, max=50), DataRequired(message="Please Fill This Field")])
     password = PasswordField("Password", validators=[DataRequired(message="Please Fill This Field")])
+
+
+class RegisterForm(FlaskForm):
+
+    username = StringField("Username", validators=[DataRequired(message="Please Fill This Field")])
+    email = StringField("Email", validators=[Email(message="Please enter a valid email address")])
+    password = PasswordField("Password", validators=[
+        DataRequired(message="Please Fill This Field"),
+        EqualTo(fieldname="confirm", message="Your Passwords Do Not Match")
+    ])
+    confirm = PasswordField("Confirm Password", validators=[DataRequired(message="Please Fill This Field")])
