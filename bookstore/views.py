@@ -99,3 +99,21 @@ def register():
     models.db.session.commit()
     flash('You have successfully registered', 'success')
     return redirect(url_for('main.books'))
+
+
+@main_blueprint.route('/login', methods=['GET', 'POST'])
+def login():
+    form = forms.LoginForm(request.form)
+    if not form.validate_on_submit():
+        return render_template('login.html', form=form)
+    user = models.User.query.filter_by(email=form.email.data).first()
+    if user:
+        if check_password_hash(user.password, form.password.data):
+            flash('You have successfully logged in.', "success")
+            models.db.session['logged_in'] = True
+            models.db.session['email'] = user.email
+            models.db.session['username'] = user.username
+            return redirect(url_for('home'))
+        else:
+            flash('Username or Password Incorrect', "Danger")
+            return redirect(url_for('login'))
