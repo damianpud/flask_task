@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from flask_wtf import FlaskForm
 
 from bookstore import models
@@ -109,9 +109,9 @@ def login():
     if user:
         if check_password_hash(user.password, form.password.data):
             flash('You have successfully logged in.', "success")
-            models.db.session['logged_in'] = True
-            models.db.session['email'] = user.email
-            models.db.session['username'] = user.username
+            session['logged_in'] = True
+            session['email'] = user.email
+            session['username'] = user.username
             return redirect(url_for('main.books'))
         else:
             flash('Username or Password Incorrect', "Danger")
