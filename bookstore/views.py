@@ -91,7 +91,6 @@ def register():
         return render_template('register.html', form=form)
     hashed_password = generate_password_hash(form.password.data, method='sha256')
     new_user = models.User(
-        name=form.name.data,
         username=form.username.data,
         email=form.email.data,
         password=hashed_password)
@@ -113,7 +112,7 @@ def login():
             models.db.session['logged_in'] = True
             models.db.session['email'] = user.email
             models.db.session['username'] = user.username
-            return redirect(url_for('home'))
+            return redirect(url_for('main.books'))
         else:
             flash('Username or Password Incorrect', "Danger")
-            return redirect(url_for('login'))
+            return redirect(url_for('/login'))
