@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_wtf import FlaskForm
 
 from bookstore import models
 from bookstore import forms
+
+from werkzeug.security import generate_password_hash, check_password_hash
 
 main_blueprint = Blueprint('main', __name__)
 
@@ -79,4 +81,21 @@ def book_delete(book_id):
         return render_template('book_delete.html', **context)
     models.db.session.delete(book)
     models.db.session.commit()
+    return redirect(url_for('main.books'))
+
+
+@main_blueprint.route('/register', methods=['GET', 'POST'])
+def register():
+    form = forms.RegisterForm(request.form)
+    if not form.validate_on_submit():
+        return render_template('register.html', form=form)
+    hashed_password = generate_password_hash(form.password.data, method='sha256')
+    new_user = models.User(
+        name=form.name.data,
+        username=form.username.data,
+        email=form.email.data,
+        password=hashed_password)
+    models.db.session.add(new_user)
+    models.db.session.commit()
+    flash('You have successfully registered', 'success')
     return redirect(url_for('main.books'))
