@@ -34,7 +34,9 @@ class BookForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[Length(min=7, max=50), DataRequired(message="Please Fill This Field")])
+    email = StringField(
+        "Email", validators=[Email(message='Enter a valid email'), DataRequired(message="Please Fill This Field")]
+    )
     password = PasswordField("Password", validators=[DataRequired(message="Please Fill This Field")])
 
 
