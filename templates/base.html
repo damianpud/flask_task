@@ -51,6 +51,18 @@
 {% block content %}
   <div class="container">
     <div class="jumbotron">
+
+      {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert">
+              x
+            </button>
+          {{ message }}
+        </div>
+      {% endfor %}
       {% block content_main %}{% endblock %}
     </div>
   </div>
