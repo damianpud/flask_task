@@ -5,6 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.sql.functions import concat
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
@@ -37,11 +38,12 @@ class Author(db.Model):
     author_books = relationship('Book', back_populates='author')
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True)
-    email = db.Column(db.String(50), unique=True)
+    username = db.Column(db.String(50), nullable=False, unique=True)
+    email = db.Column(db.String(50), nullable=False, unique=True)
     password = db.Column(db.String(256), unique=True)
+    created = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 engine = create_engine('sqlite:///db.sqlite3')
