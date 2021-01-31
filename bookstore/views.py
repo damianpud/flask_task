@@ -28,6 +28,7 @@ def categories():
 
 
 @main_blueprint.route('/create/author', methods=['GET', 'POST'])
+@login_required
 def author_create():
     form = forms.AuthorForm()
     if not form.validate_on_submit():
@@ -42,6 +43,7 @@ def author_create():
 
 
 @main_blueprint.route('/create/book', methods=['GET', 'POST'])
+@login_required
 def book_create():
     form = forms.BookForm()
     if not form.validate_on_submit():
@@ -62,6 +64,7 @@ def book_create():
 
 
 @main_blueprint.route('/update/book/<book_id>', methods=['GET', 'POST'])
+@login_required
 def book_update(book_id):
     book = models.Book.query.get(book_id)
     form = forms.BookForm(obj=book)
@@ -81,6 +84,7 @@ def book_update(book_id):
 
 
 @main_blueprint.route('/delete/book/<book_id>', methods=['GET', 'POST'])
+@login_required
 def book_delete(book_id):
     book = models.Book.query.get(book_id)
     form = FlaskForm()
