@@ -39,6 +39,7 @@ def author_create():
     )
     models.db.session.add(author)
     models.db.session.commit()
+    flash(f'You have added new author {author.name} {author.surname}!')
     return redirect(url_for('main.books'))
 
 
@@ -60,6 +61,7 @@ def book_create():
     )
     models.db.session.add(book)
     models.db.session.commit()
+    flash(f'You have added new book {book.title}!')
     return redirect(url_for('main.books'))
 
 
@@ -80,6 +82,7 @@ def book_update(book_id):
     book.description = form.description.data
     models.db.session.add(book)
     models.db.session.commit()
+    flash(f'You have updated {book.title}!')
     return redirect(url_for('main.books'))
 
 
@@ -93,6 +96,7 @@ def book_delete(book_id):
         return render_template('book_delete.html', **context)
     models.db.session.delete(book)
     models.db.session.commit()
+    flash(f'You have deleted {book.title}!')
     return redirect(url_for('main.books'))
 
 
@@ -101,14 +105,19 @@ def register():
     form = forms.RegisterForm(request.form)
     if not form.validate_on_submit():
         return render_template('register.html', form=form)
-    hashed_password = generate_password_hash(form.password.data, method='sha256')
-    new_user = models.User(
-        username=form.username.data,
-        email=form.email.data,
-        password=hashed_password)
-    models.db.session.add(new_user)
-    models.db.session.commit()
-    flash('You have successfully registered', 'success')
+    existing_user = models.User.query.filter_by(email=form.email.data).first()
+    if existing_user is None:
+        hashed_password = generate_password_hash(form.password.data, method='sha256')
+        new_user = models.User(
+            username=form.username.data,
+            email=form.email.data,
+            password=hashed_password)
+        models.db.session.add(new_user)
+        models.db.session.commit()
+        flash('You have successfully registered!')
+    else:
+        flash('A user already exists.')
+        return render_template('register.html', form=form)
     return redirect(url_for('main.books'))
 
 
@@ -122,13 +131,15 @@ def login():
         if check_password_hash(user.password, form.password.data):
             login_user(user, remember=True)
             next_page = request.args.get('next')
+            flash('You have successfully logged in.')
             return redirect(next_page or url_for('main.books'))
-        else:
-            return redirect(url_for('main.login'))
+    flash('Invalid username/password combination')
+    return redirect(url_for('main.login'))
 
 
 @main_blueprint.route('/logout', methods=['GET'])
 @login_required
 def logout():
     logout_user()
+    flash('You have successfully logged out.')
     return redirect(url_for('main.books'))
