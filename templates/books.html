@@ -3,6 +3,7 @@
 {% block content_main %}
   <h1>Books</h1>
   <ul>
+    {% if current_user.is_authenticated %}
     {% for book in books %}
       <li>
         {{ book.title}} - {{ book.author.name }} {{ book.author.surname }} - {{ book.price }} PLN
@@ -10,5 +11,12 @@
         <a href="{{ url_for('main.book_delete', book_id=book.id) }}">delete</a>
       </li>
     {% endfor %}
+    {% else %}
+    {% for book in books %}
+        <li>
+        {{ book.title}} - {{ book.author.name }} {{ book.author.surname }} - {{ book.price }} PLN
+        </li>
+    {% endfor %}
+    {% endif %}
   </ul>
 {% endblock %}
