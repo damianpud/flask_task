@@ -29,6 +29,7 @@ class Book(db.Model):
     type = db.Column(db.String(length=64), nullable=False)
     description = db.Column(db.String(length=5000))
     created = db.Column(db.DateTime, default=datetime.utcnow)
+    order = relationship('Order', back_populates='book')
 
 
 class Author(db.Model):
@@ -40,10 +41,22 @@ class Author(db.Model):
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(length=128), nullable=False, unique=True)
+    username = db.Column(db.String(length=128), nullable=False)
     email = db.Column(db.String(length=128), nullable=False, unique=True)
     password = db.Column(db.String(length=256), unique=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
+    order = relationship('Order', back_populates='user')
+
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_number = db.Column(db.String(length=12), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = relationship('User', back_populates='order')
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+    book = relationship('Book', back_populates='order')
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    status = db.Column(db.String(length=128), nullable=False)
 
 
 engine = create_engine('sqlite:///db.sqlite3')
