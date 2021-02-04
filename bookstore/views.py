@@ -164,3 +164,14 @@ def add_to_cart(book_id):
     models.db.session.commit()
     flash('You have made new order.')
     return redirect(url_for('main.books'))
+
+
+@main_blueprint.route('/cart', methods=['GET'])
+@login_required
+def cart():
+    user_cart = models.Order.query.filter_by(status='Cart', user_id=current_user.id).all()
+    context = {
+        'user': current_user,
+        'user_cart': user_cart
+    }
+    return render_template('make_order.html', **context)
