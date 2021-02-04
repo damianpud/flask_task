@@ -174,4 +174,4 @@ def cart():
         'user': current_user,
         'user_cart': user_cart
     }
-    return render_template('make_order.html', **context)
+    return render_template('cart.html', **context)
