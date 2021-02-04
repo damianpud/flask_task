@@ -6,6 +6,7 @@ from bookstore import models
 from bookstore import forms
 
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
 
 main_blueprint = Blueprint('main', __name__)
 login_manager = LoginManager()
@@ -142,4 +143,24 @@ def login():
 def logout():
     logout_user()
     flash('You have successfully logged out.')
+    return redirect(url_for('main.books'))
+
+
+@main_blueprint.route('/order/book/<book_id>', methods=['GET', 'POST'])
+@login_required
+def add_to_cart(book_id):
+    user_cart = models.Order.query.filter_by(status='Cart', user_id=current_user.id).first()
+    if not user_cart:
+        order_number = str(random.randint(100000000000, 999999999999))
+    else:
+        order_number = user_cart.order_number
+    order = models.Order(
+        order_number=order_number,
+        user_id=int(current_user.id),
+        book_id=int(book_id),
+        status='Cart'
+    )
+    models.db.session.add(order)
+    models.db.session.commit()
+    flash('You have made new order.')
     return redirect(url_for('main.books'))
