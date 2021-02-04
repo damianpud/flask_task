@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content_main %}
+
+      <h1>Your Cart:</h1>
+
+            {% for order in user_cart %}
+                  <li>{{ order.order_number }} - {{ order.book.title }} - {{ order.book.price }} PLN</li>
+            {% endfor %}
+
+{% endblock %}
