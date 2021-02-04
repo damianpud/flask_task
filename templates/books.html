@@ -8,7 +8,8 @@
       <li>
         {{ book.title}} - {{ book.author.name }} {{ book.author.surname }} - {{ book.price }} PLN
         <a href="{{ url_for('main.book_update', book_id=book.id) }}">update</a> /
-        <a href="{{ url_for('main.book_delete', book_id=book.id) }}">delete</a>
+        <a href="{{ url_for('main.book_delete', book_id=book.id) }}">delete</a> /
+        <a href="{{ url_for('main.add_to_cart', book_id=book.id) }}">Buy</a>
       </li>
     {% endfor %}
     {% else %}
