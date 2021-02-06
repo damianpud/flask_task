@@ -2,10 +2,13 @@
 
 {% block content_main %}
 
-      <h1>Your Cart:</h1>
+      <h1>Shopping Cart</h1>
 
             {% for order in user_cart %}
-                  <li>{{ order.order_number }} - {{ order.book.title }} - {{ order.book.price }} PLN</li>
+                  <li>{{ order.order_number }} - {{ order.book.title }} - {{ order.book.price }} PLN
+                        <a href="{{ url_for('main.delete_from_cart', order_id=order.id) }}">Remove</a>
+                  </li>
+
             {% endfor %}
 
 {% endblock %}
