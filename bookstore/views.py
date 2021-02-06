@@ -146,7 +146,7 @@ def logout():
     return redirect(url_for('main.books'))
 
 
-@main_blueprint.route('/order/book/<book_id>', methods=['GET', 'POST'])
+@main_blueprint.route('/cart/book/<book_id>', methods=['GET', 'POST'])
 @login_required
 def add_to_cart(book_id):
     user_cart = models.Order.query.filter_by(status='Cart', user_id=current_user.id).first()
@@ -164,6 +164,17 @@ def add_to_cart(book_id):
     models.db.session.commit()
     flash('You have made new order.')
     return redirect(url_for('main.books'))
+
+
+@main_blueprint.route('/cart/<order_id>', methods=['GET', 'POST'])
+@login_required
+def delete_from_cart(order_id):
+    order = models.Order.query.get(order_id)
+    title = order.book.title
+    models.db.session.delete(order)
+    models.db.session.commit()
+    flash(f'You have deleted {title}!')
+    return redirect(url_for('main.cart'))
 
 
 @main_blueprint.route('/cart', methods=['GET'])
