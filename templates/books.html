@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content_main %}
-  <h1>Books</h1>
+  <h1>{{ title }}</h1>
   <ul>
     {% if current_user.is_authenticated %}
     {% for book in books %}

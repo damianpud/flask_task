@@ -20,12 +20,21 @@ def load_user(user_id):
 
 @main_blueprint.route('/')
 def books():
-    return render_template('books.html', books=models.Book.query)
+    return render_template('books.html', books=models.Book.query, title='Books')
 
 
 @main_blueprint.route('/categories')
 def categories():
     return render_template('categories.html', categories=models.Category.query)
+
+
+@main_blueprint.route('/categories/<category_id>')
+def go_to_category(category_id):
+    return render_template(
+        'books.html',
+        books=models.Book.query.filter_by(category_id=category_id).all(),
+        title=models.Category.query.filter_by(id=category_id).one().name
+    )
 
 
 @main_blueprint.route('/create/author', methods=['GET', 'POST'])
