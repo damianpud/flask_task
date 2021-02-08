@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_wtf import FlaskForm
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from sqlalchemy import func
+from sqlalchemy.orm import aliased
 
 from bookstore import models
 from bookstore import forms
@@ -190,8 +192,9 @@ def delete_from_cart(order_id):
 @login_required
 def cart():
     user_cart = models.Order.query.filter_by(status='Cart', user_id=current_user.id).all()
-    context = {
-        'user': current_user,
-        'user_cart': user_cart
-    }
+    total_price = models.db.session().query(func.sum(models.Book.price))\
+        .join(aliased(models.Order))\
+        .filter_by(status='Cart', user_id=current_user.id).first()[0]
+    context = {'user_cart': user_cart,
+               'total_price': int(total_price)}
     return render_template('cart.html', **context)
