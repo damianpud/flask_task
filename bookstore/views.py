@@ -196,7 +196,7 @@ def cart():
         .join(aliased(models.Order))\
         .filter_by(status='Cart', user_id=current_user.id).first()[0]
     context = {'user_cart': user_cart,
-               'total_price': int(total_price)}
+               'total_price': str(total_price)}
     return render_template('cart.html', **context)
 
 
