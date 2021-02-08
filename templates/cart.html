@@ -4,11 +4,14 @@
 
       <h1>Shopping Cart</h1>
 
+            <h2>Items</h2>
             {% for order in user_cart %}
-                  <li>{{ order.order_number }} - {{ order.book.title }} - {{ order.book.price }} PLN
+                  <li>{{ order.book.title }} ({{ order.book.author.name }} {{ order.book.author.surname }})
+                        - {{ order.book.price }} PLN
                         <a href="{{ url_for('main.delete_from_cart', order_id=order.id) }}">Remove</a>
                   </li>
-
             {% endfor %}
+            <p></p>
+            <p>Total price: {{ total_price }} PLN</p>
 
 {% endblock %}
