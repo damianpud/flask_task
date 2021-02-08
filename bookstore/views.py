@@ -200,11 +200,14 @@ def cart():
     return render_template('cart.html', **context)
 
 
-@main_blueprint.route('/cart/make_order', methods=['GET', 'POST'])
+@main_blueprint.route('/cart/checkout', methods=['GET', 'POST'])
 @login_required
 def checkout():
     user_cart = models.Order.query.filter_by(status='Cart', user_id=current_user.id).all()
-    for item in user_cart:
-        item.status = 'Created'
-    models.db.session.commit()
+    if user_cart:
+        for item in user_cart:
+            item.status = 'Created'
+        models.db.session.commit()
+    else:
+        flash('Cart is empty')
     return redirect(url_for('main.cart'))
