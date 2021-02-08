@@ -13,5 +13,5 @@
             {% endfor %}
             <p></p>
             <p>Total price: {{ total_price }} PLN</p>
-
+            <a class="btn btn-success" type="button" href="{{ url_for('main.checkout') }}">Checkout</a>
 {% endblock %}
