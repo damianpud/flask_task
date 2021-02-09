@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
 from flask_wtf import FlaskForm
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from sqlalchemy import func
 from sqlalchemy.orm import aliased
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 from bookstore import models
 from bookstore import forms
@@ -13,6 +15,30 @@ import random
 main_blueprint = Blueprint('main', __name__)
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
+admin = Admin(template_mode='bootstrap4')
+
+
+class AdminModelView(ModelView):
+
+    def is_accessible(self):
+        return (current_user.is_active and
+                current_user.is_authenticated and
+                current_user.has_role('superuser')
+                )
+
+    def _handle_view(self, name, **kwargs):
+        if not self.is_accessible():
+            if current_user.is_authenticated:
+                abort(403)
+            else:
+                return redirect(url_for('security.login', next=request.url))
+
+
+admin.add_view(AdminModelView(models.User, models.db.session))
+admin.add_view(AdminModelView(models.Role, models.db.session))
+admin.add_view(AdminModelView(models.Book, models.db.session))
+admin.add_view(AdminModelView(models.Author, models.db.session))
+admin.add_view(AdminModelView(models.Category, models.db.session))
 
 
 @login_manager.user_loader
