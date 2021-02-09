@@ -5,6 +5,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+import click
 
 from bookstore import models
 from bookstore import forms
@@ -24,6 +25,28 @@ def create_roles():
     models.db.session.add(user_role)
     models.db.session.add(super_user_role)
     models.db.session.commit()
+    return
+
+
+def create_superuser(username, email, password):
+    existing_user = models.User.query.filter_by(email=email).first()
+    roles = models.Role.query.first()
+    if not roles:
+        create_roles()
+    roles = models.Role.query.filter_by(name='superuser').first()
+    if existing_user is None:
+        hashed_password = generate_password_hash(password, method='sha256')
+        new_user = models.User(
+            username=username,
+            email=email,
+            password=hashed_password,
+        )
+        models.db.session.add(new_user)
+        models.db.session.commit()
+        models.db.session.execute(models.roles_users.insert().values(user_id=new_user.id, role_id=roles.id))
+        models.db.session.commit()
+    else:
+        click.echo('A user already exist!')
     return
 
 
