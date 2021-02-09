@@ -1,8 +1,10 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_migrate import Migrate
+import click
+from click_params import EMAIL
 
-from bookstore.views import main_blueprint, login_manager, admin
+from bookstore.views import main_blueprint, login_manager, admin, create_superuser
 from bookstore.models import db
 
 app = Flask(__name__)
@@ -15,6 +17,18 @@ db.init_app(app)
 Migrate(app, db)
 Bootstrap(app)
 login_manager.init_app(app)
+
+_CREATE_SUPERUSER_HELP = (
+    'Create superuser account.'
+)
+
+
+@app.cli.command('createsuperuser', help=_CREATE_SUPERUSER_HELP)
+@click.option('--username', prompt=True)
+@click.option('--email', prompt=True, type=EMAIL)
+@click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True)
+def create_superuser_command(username, email, password):
+    create_superuser(username, email, password)
 
 
 if __name__ == '__main__':
