@@ -18,6 +18,15 @@ login_manager.login_view = 'main.login'
 admin = Admin(template_mode='bootstrap4')
 
 
+def create_roles():
+    user_role = models.Role(name='user')
+    super_user_role = models.Role(name='superuser')
+    models.db.session.add(user_role)
+    models.db.session.add(super_user_role)
+    models.db.session.commit()
+    return
+
+
 class AdminModelView(ModelView):
 
     def is_accessible(self):
