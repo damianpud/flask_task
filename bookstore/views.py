@@ -153,13 +153,20 @@ def register():
     if not form.validate_on_submit():
         return render_template('register.html', form=form)
     existing_user = models.User.query.filter_by(email=form.email.data).first()
+    roles = models.Role.query.first()
+    if not roles:
+        create_roles()
+    roles = models.Role.query.filter_by(name='user').first()
     if existing_user is None:
         hashed_password = generate_password_hash(form.password.data, method='sha256')
         new_user = models.User(
             username=form.username.data,
             email=form.email.data,
-            password=hashed_password)
+            password=hashed_password,
+        )
         models.db.session.add(new_user)
+        models.db.session.commit()
+        models.db.session.execute(models.roles_users.insert().values(user_id=new_user.id, role_id=roles.id))
         models.db.session.commit()
         flash('You have successfully registered!')
     else:
