@@ -199,6 +199,14 @@ def logout():
     return redirect(url_for('main.books'))
 
 
+@main_blueprint.route('/profile', methods=['GET'])
+@login_required
+def profile():
+    context = {'current_user': current_user,
+               'previous_orders': models.Order.query.filter_by(status='Created', user_id=current_user.id).all()}
+    return render_template('profile.html', **context)
+
+
 @main_blueprint.route('/cart/book/<book_id>', methods=['GET', 'POST'])
 @login_required
 def add_to_cart(book_id):
