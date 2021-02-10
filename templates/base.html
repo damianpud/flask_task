@@ -14,15 +14,17 @@
           <a class="nav-item nav-link active" href="{{ url_for('main.categories') }}">
             Categories
           </a>
-          <div class="nav-item dropdown">
-              <a class="nav-link active dropdown-toggle" href="#" data-toggle="dropdown">
-                Create
-              </a>
-              <div class="dropdown-menu">
-                <a class="dropdown-item" href="{{ url_for('main.author_create') }}">Add Author</a>
-                <a class="dropdown-item" href="{{ url_for('main.book_create') }}">Add Book</a>
-              </div>
-          </div>
+          {% if current_user.is_authenticated and current_user.has_role('superuser') %}
+            <div class="nav-item dropdown">
+                <a class="nav-link active dropdown-toggle" href="#" data-toggle="dropdown">
+                  Create
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{{ url_for('main.author_create') }}">Add Author</a>
+                  <a class="dropdown-item" href="{{ url_for('main.book_create') }}">Add Book</a>
+                </div>
+            </div>
+          {% endif %}
         </div>
       </div>
       <div class="navbar-nav ml-auto">
