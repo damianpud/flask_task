@@ -3,20 +3,30 @@
 {% block content_main %}
   <h1>{{ title }}</h1>
   <ul>
-    {% if current_user.is_authenticated %}
+    {% if current_user.is_authenticated and current_user.has_role('superuser') %}
     {% for book in books %}
       <li>
-        {{ book.title}} - {{ book.author.name }} {{ book.author.surname }} - {{ book.price }} PLN
+        <a href="{{ url_for('main.book_detail', book_id=book.id) }}">{{ book.title}}</a>
+        - {{ book.author.name }} {{ book.author.surname }} - {{ book.price }} PLN
         <a href="{{ url_for('main.book_update', book_id=book.id) }}">update</a> /
         <a href="{{ url_for('main.book_delete', book_id=book.id) }}">delete</a> /
         <a href="{{ url_for('main.add_to_cart', book_id=book.id) }}">Buy</a>
       </li>
     {% endfor %}
+    {% elif current_user.is_authenticated  %}
+    {% for book in books %}
+      <li>
+        <a href="{{ url_for('main.book_detail', book_id=book.id) }}">{{ book.title }}</a>
+        - {{ book.author.name }} {{ book.author.surname }} - {{ book.price }} PLN
+        <a href="{{ url_for('main.add_to_cart', book_id=book.id) }}">Buy</a>
+      </li>
+    {% endfor %}
     {% else %}
     {% for book in books %}
-        <li>
-        {{ book.title}} - {{ book.author.name }} {{ book.author.surname }} - {{ book.price }} PLN
-        </li>
+      <li>
+        <a href="{{ url_for('main.book_detail', book_id=book.id) }}">{{ book.title }}</a>
+        - {{ book.author.name }} {{ book.author.surname }} - {{ book.price }} PLN
+      </li>
     {% endfor %}
     {% endif %}
   </ul>
