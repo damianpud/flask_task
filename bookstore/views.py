@@ -170,6 +170,13 @@ def book_delete(book_id):
     return redirect(url_for('main.books'))
 
 
+@main_blueprint.route('/detail/book/<book_id>', methods=['GET'])
+def book_detail(book_id):
+    book = models.Book.query.get(book_id)
+    context = {'book': book}
+    return render_template('book_detail.html', **context)
+
+
 @main_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = forms.RegisterForm(request.form)
