@@ -1,13 +1,13 @@
-from datetime import date
-
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from flask_wtf.form import _Auto
 from wtforms import (
-    DateField, IntegerField, SelectField, StringField, ValidationError, SubmitField, TextAreaField, PasswordField
+    DateField, IntegerField, SelectField, StringField, TextAreaField, PasswordField,
+    FileField
 )
 from wtforms.validators import DataRequired, Length, NumberRange, EqualTo, Email
 
-from bookstore.models import Author, Category, Book
+from bookstore.models import Author, Category
 
 
 class AuthorForm(FlaskForm):
@@ -31,6 +31,7 @@ class BookForm(FlaskForm):
     price = IntegerField(validators=[DataRequired()])
     type = SelectField(choices=['Hardcover', 'Paperback'], validators=[DataRequired()])
     description = TextAreaField()
+    cover = FileField('image', validators=[FileAllowed(['jpg', 'png'], message='Images only!')])
 
 
 class LoginForm(FlaskForm):
