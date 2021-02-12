@@ -27,6 +27,7 @@ class Book(db.Model):
     price = db.Column(db.Integer, nullable=False)
     type = db.Column(db.String(length=64), nullable=False)
     description = db.Column(db.String(length=5000))
+    cover = db.Column(db.String(length=256))
     created = db.Column(db.DateTime, default=datetime.utcnow)
     order = relationship('Order', back_populates='book')
 
