@@ -3,10 +3,11 @@
 {% block content_main %}
 
     <div class="row">
-      <div class="col-4">
+      <div class="col">
+        <img src='{{ book.cover }}' style="width:400px;height:600px;">
       </div>
       <div class="col">
-        <li><b>Title: </b> {{ book.title }} </li>
+        <h1><b> {{ book.title }} </b></h1>
         <li><b>Author: </b> {{ book.author.name }} {{ book.author.surname }} </li>
         <li><b>Released: </b> {{ book.publish_date }} </li>
         <li><b>Type: </b> {{ book.type}} </li>
