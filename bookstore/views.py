@@ -5,7 +5,9 @@ from sqlalchemy import func
 from sqlalchemy.orm import aliased
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_uploads import IMAGES, UploadSet
 import click
+from werkzeug.utils import secure_filename
 
 from bookstore import models
 from bookstore import forms
@@ -17,6 +19,7 @@ main_blueprint = Blueprint('main', __name__)
 login_manager = LoginManager()
 login_manager.login_view = 'main.login'
 admin = Admin(template_mode='bootstrap4')
+images = UploadSet('images', IMAGES)
 
 
 def create_roles():
@@ -119,6 +122,8 @@ def book_create():
     form = forms.BookForm()
     if not form.validate_on_submit():
         return render_template('book_form.html', form=form)
+    uploaded_file = form.cover.data
+    filename = secure_filename(uploaded_file.filename)
     book = models.Book(
         title=form.title.data,
         author_id=form.author.data,
@@ -127,9 +132,12 @@ def book_create():
         publish_date=form.publish_date.data,
         price=form.price.data,
         type=form.type.data,
-        description=form.description.data
+        description=form.description.data,
+        cover='/static/media/' + filename
     )
     models.db.session.add(book)
+    if uploaded_file:
+        images.save(form.cover.data)
     models.db.session.commit()
     flash(f'You have added new book {book.title}!')
     return redirect(url_for('main.books'))
@@ -142,6 +150,8 @@ def book_update(book_id):
     form = forms.BookForm(obj=book)
     if not form.validate_on_submit():
         return render_template('book_form.html', form=form)
+    uploaded_file = form.cover.data
+    filename = secure_filename(uploaded_file.filename)
     book.title = form.title.data
     book.author_id = form.author.data
     book.category_id = form.category.data
@@ -150,6 +160,9 @@ def book_update(book_id):
     book.price = form.price.data
     book.type = form.type.data
     book.description = form.description.data
+    if uploaded_file:
+        book.cover = '/static/media/' + filename
+        images.save(form.cover.data)
     models.db.session.add(book)
     models.db.session.commit()
     flash(f'You have updated {book.title}!')
