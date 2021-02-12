@@ -2,7 +2,7 @@
 
 {% block content_main %}
 
-  <form method="POST">
+  <form method="POST" enctype=multipart/form-data>
 
     {{ form.csrf_token }}
 
@@ -109,6 +109,17 @@
         name="description" id="description" value="{{ form.description.data or '' }}"
         >
         {% for error in form.description.errors %}
+          <div class="invalid-feedback">{{ error }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        {{ form.cover.label }}
+        <input
+          class="file{% if form.cover.errors %} is-invalid{% endif %}"
+          name="cover" id="cover" type="file" value="{{ form.cover.data or '' }}"
+        >
+        {% for error in form.cover.errors %}
           <div class="invalid-feedback">{{ error }}</div>
         {% endfor %}
       </div>
