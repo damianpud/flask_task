@@ -11,4 +11,5 @@ click-params==0.1.1
 flask-security==3.0.0
 flask-admin==1.5.7
 email_validator==1.1.2
-werkzeug==1.0.1
+werkzeug==0.16.0
+flask-uploads==0.2.1
