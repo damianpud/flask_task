@@ -3,15 +3,22 @@
 {% block content_main %}
 
       <h1>Shopping Cart</h1>
+      <h2>Items</h2>
+      <div class="row">
+        {% for order in user_cart %}
+          <div class="col-3 col-md-2">
+            <p><a href="{{ url_for('main.book_detail', book_id=order.book.id) }}">
+               <img src='{{ order.book.cover }}' style="max-height:200px;max-width:80px;"></a></p>
+          </div>
+          <div class="col-9 col-md-10">
+            {{ order.book.title }} ({{ order.book.author.name }} {{ order.book.author.surname }})
+            - {{ order.book.price }} PLN
+            <a href="{{ url_for('main.delete_from_cart', order_id=order.id) }}">Remove</a>
+          </div>
+        {% endfor %}
+      </div>
+      <p></p>
+      <p>Total price: {{ total_price }} PLN</p>
+      <a class="btn btn-success" type="button" href="{{ url_for('main.checkout') }}">Checkout</a>
 
-            <h2>Items</h2>
-            {% for order in user_cart %}
-                  <li>{{ order.book.title }} ({{ order.book.author.name }} {{ order.book.author.surname }})
-                        - {{ order.book.price }} PLN
-                        <a href="{{ url_for('main.delete_from_cart', order_id=order.id) }}">Remove</a>
-                  </li>
-            {% endfor %}
-            <p></p>
-            <p>Total price: {{ total_price }} PLN</p>
-            <a class="btn btn-success" type="button" href="{{ url_for('main.checkout') }}">Checkout</a>
 {% endblock %}
