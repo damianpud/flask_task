@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block styles %}
+  {{super()}}
+  <link rel="stylesheet" href="/static/css/cart.css" type="text/css">
+{% endblock %}
+
 {% block content_main %}
 
       <h1>Shopping Cart</h1>
@@ -8,7 +13,7 @@
         {% for order in user_cart %}
           <div class="col-3 col-md-2">
             <p><a href="{{ url_for('main.book_detail', book_id=order.book.id) }}">
-               <img src='{{ order.book.cover }}' style="max-height:200px;max-width:80px;"></a></p>
+               <img src='{{ order.book.cover }}'></a></p>
           </div>
           <div class="col-9 col-md-10">
             {{ order.book.title }} ({{ order.book.author.name }} {{ order.book.author.surname }})

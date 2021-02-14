@@ -1,10 +1,15 @@
 {% extends "base.html" %}
 
+{% block styles %}
+  {{super()}}
+  <link rel="stylesheet" href="/static/css/detail_styles.css" type="text/css">
+{% endblock %}
+
 {% block content_main %}
 
     <div class="row">
       <div class="col">
-        <img src='{{ book.cover }}' style="width:400px;height:600px;">
+        <img src='{{ book.cover }}'>
       </div>
       <div class="col">
         <h1><b> {{ book.title }} </b></h1>
@@ -20,4 +25,5 @@
         <a class="btn btn-success" type="button" href="{{ url_for('main.add_to_cart', book_id=book.id) }}">Add to Cart</a>
       </div>
     </div>
+
 {% endblock %}
