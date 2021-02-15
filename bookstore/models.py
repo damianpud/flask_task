@@ -53,6 +53,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(length=256), unique=True)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     active = db.Column(db.Boolean, default=True)
+    personal_data = relationship('PersonalData', back_populates='user')
     order = relationship('Order', back_populates='user')
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
@@ -76,6 +77,17 @@ class Order(db.Model):
     book = relationship('Book', back_populates='order')
     created = db.Column(db.DateTime, default=datetime.utcnow)
     status = db.Column(db.String(length=128), nullable=False)
+
+
+class PersonalData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(length=128), nullable=False)
+    last_name = db.Column(db.String(length=128), nullable=False)
+    address = db.Column(db.String(length=128), nullable=False)
+    postal_code = db.Column(db.String(length=20), nullable=False)
+    city = db.Column(db.String(length=128), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = relationship('User', back_populates='personal_data')
 
 
 engine = create_engine('sqlite:///db.sqlite3')
