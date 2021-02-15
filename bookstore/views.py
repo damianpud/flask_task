@@ -257,6 +257,26 @@ def user_personal_data():
     return render_template('personal_data.html', **context)
 
 
+@main_blueprint.route('/profile/create_personal_data', methods=['GET', 'POST'])
+@login_required
+def create_user_personal_data():
+    form = forms.PersonalDataForm()
+    if not form.validate_on_submit():
+        return render_template('personal_data_form.html', form=form)
+    personal_data = models.PersonalData(
+        first_name=form.first_name.data,
+        last_name=form.last_name.data,
+        address=form.address.data,
+        postal_code=form.postal_code.data,
+        city=form.city.data,
+        user_id=current_user.id
+    )
+    models.db.session.add(personal_data)
+    models.db.session.commit()
+    flash(f'You have added your personal data!')
+    return redirect(url_for('main.profile'))
+
+
 @main_blueprint.route('/cart/book/<book_id>', methods=['GET', 'POST'])
 @login_required
 def add_to_cart(book_id):
