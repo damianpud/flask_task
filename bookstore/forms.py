@@ -50,3 +50,13 @@ class RegisterForm(FlaskForm):
         EqualTo(fieldname="confirm", message="Your Passwords Do Not Match")
     ])
     confirm = PasswordField("Confirm Password", validators=[DataRequired(message="Please Fill This Field")])
+
+
+class PersonalDataForm(FlaskForm):
+
+    first_name = StringField("Firstname", validators=[DataRequired(message="Please Fill This Field")])
+    last_name = StringField("Lastname", validators=[DataRequired(message="Please Fill This Field")])
+    address = StringField("Address", validators=[DataRequired(message="Please Fill This Field")])
+    postal_code = StringField("Postal Code", validators=[DataRequired(message="Please Fill This Field")])
+    city = StringField("City", validators=[DataRequired(message="Please Fill This Field")])
+
