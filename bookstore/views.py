@@ -250,6 +250,13 @@ def profile():
     return render_template('profile.html', **context)
 
 
+@main_blueprint.route('/profile/personal_data', methods=['GET'])
+@login_required
+def user_personal_data():
+    context = {'personal_data': models.PersonalData.query.filter_by(user_id=current_user.id).all()}
+    return render_template('personal_data.html', **context)
+
+
 @main_blueprint.route('/cart/book/<book_id>', methods=['GET', 'POST'])
 @login_required
 def add_to_cart(book_id):
