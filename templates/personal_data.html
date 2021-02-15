@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content_main %}
+    <h1>Your personal data</h1>
+    <div class="row">
+      <div class="col-lg-3">
+          {% if personal_data %}
+            <p><a href="{{ url_for('main.update_user_personal_data') }}">Update personal data</a></p>
+          {% else %}
+            <p><a href="{{ url_for('main.create_user_personal_data') }}">Add personal data</a></p>
+          {% endif %}
+      </div>
+      <div class="col-lg-9">
+        {% for data in personal_data %}
+          <li>{{ data.first_name }} {{ data.last_name }}</li>
+          <li>{{ data.address }}</li>
+          <li>{{ data.postal_code }} {{ data.city }}</li>
+        {% endfor %}
+      </div>
+    </div>
+
+{% endblock %}
