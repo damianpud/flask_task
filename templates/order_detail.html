@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content_main %}
+
+    <h1>Order number - {{ detail.first().order.order_number }}</h1>
+    <p></p>
+    <h2>Items:</h2>
+    <p></p>
+    <div class="row">
+      {% for item in detail %}
+        <div class="col-3 col-md-2">
+          <p><a href="{{ url_for('main.book_detail', book_id=item.book.id) }}">
+             <img src='{{ item.book.cover }}' style="max-height:200px;max-width:80px;"></a></p>
+        </div>
+        <div class="col-9 col-md-10">
+          {{ item.book.title }} ({{ item.book.author.name }} {{ item.book.author.surname }})
+          - {{ item.book.price }} PLN
+        </div>
+      {% endfor %}
+    </div>
+
+{% endblock %}
