@@ -245,8 +245,7 @@ def logout():
 @main_blueprint.route('/profile', methods=['GET'])
 @login_required
 def profile():
-    context = {'current_user': current_user,
-               'previous_orders': models.Order.query.filter_by(status='Created', user_id=current_user.id).all()}
+    context = {'previous_orders': models.Order.query.filter_by(user_id=current_user.id).all()}
     return render_template('profile.html', **context)
 
 
@@ -298,41 +297,35 @@ def update_user_personal_data():
 @main_blueprint.route('/cart/book/<book_id>', methods=['GET', 'POST'])
 @login_required
 def add_to_cart(book_id):
-    user_cart = models.Order.query.filter_by(status='Cart', user_id=current_user.id).first()
-    if not user_cart:
-        order_number = str(random.randint(100000000000, 999999999999))
-    else:
-        order_number = user_cart.order_number
-    order = models.Order(
-        order_number=order_number,
+    user_cart = models.OrderItems(
         user_id=int(current_user.id),
         book_id=int(book_id),
-        status='Cart'
     )
-    models.db.session.add(order)
+    models.db.session.add(user_cart)
     models.db.session.commit()
-    flash('You have made new order.')
     return redirect(url_for('main.books'))
 
 
-@main_blueprint.route('/cart/<order_id>', methods=['GET', 'POST'])
+@main_blueprint.route('/cart/<order_item>', methods=['GET', 'POST'])
 @login_required
-def delete_from_cart(order_id):
-    order = models.Order.query.get(order_id)
-    title = order.book.title
-    models.db.session.delete(order)
+def delete_from_cart(order_item):
+    user_cart = models.OrderItems.query.get(order_item)
+    title = user_cart.book.title
+    models.db.session.delete(user_cart)
     models.db.session.commit()
-    flash(f'You have deleted {title}!')
+    flash(f'You have removed from cart {title}!')
     return redirect(url_for('main.cart'))
 
 
 @main_blueprint.route('/cart', methods=['GET'])
 @login_required
 def cart():
-    user_cart = models.Order.query.filter_by(status='Cart', user_id=current_user.id).all()
+    user_cart = models.OrderItems.query.filter_by(user_id=current_user.id, cart=True).all()
     total_price = models.db.session().query(func.sum(models.Book.price))\
-        .join(aliased(models.Order))\
-        .filter_by(status='Cart', user_id=current_user.id).first()[0]
+        .join(aliased(models.OrderItems))\
+        .filter_by(user_id=current_user.id, cart=True).first()[0]
+    if not total_price:
+        total_price = 0
     context = {'user_cart': user_cart,
                'total_price': str(total_price)}
     return render_template('cart.html', **context)
@@ -341,11 +334,34 @@ def cart():
 @main_blueprint.route('/cart/checkout', methods=['GET', 'POST'])
 @login_required
 def checkout():
-    user_cart = models.Order.query.filter_by(status='Cart', user_id=current_user.id).all()
+    user_cart = models.OrderItems.query.filter_by(user_id=current_user.id, cart=True).all()
+    order_number = str(random.randint(100000000000, 999999999999))
     if user_cart:
+        order = models.Order(
+            order_number=order_number,
+            user_id=current_user.id,
+        )
+        models.db.session.add(order)
+        models.db.session.commit()
         for item in user_cart:
-            item.status = 'Created'
+            item.cart = False
+            item.order_id = order.id
         models.db.session.commit()
     else:
         flash('Cart is empty')
-    return redirect(url_for('main.cart'))
+        return redirect(url_for('main.cart'))
+    return redirect(url_for('main.make_order', order_id=order.id))
+
+
+@main_blueprint.route('/cart/make_order/<order_id>', methods=['GET', 'POST'])
+@login_required
+def make_order(order_id):
+    context = {'ordered_items': models.OrderItems.query
+                                .filter_by(user_id=current_user.id, cart=False, order_id=order_id).all(),
+               'total_price': models.db.session().query(func.sum(models.Book.price))
+                              .join(aliased(models.OrderItems))
+                              .filter_by(user_id=current_user.id, cart=False, order_id=order_id).first()[0],
+               'personal_data': models.PersonalData.query.filter_by(user_id=current_user.id).all(),
+               'order': models.Order.query.get(order_id)}
+    return render_template('make_order.html', **context)
+
