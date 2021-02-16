@@ -9,8 +9,8 @@
       <div class="col-lg-9">
         <p><b>Orders history</b></p>
         {% for order in previous_orders %}
-            <li>{{ order.order_number }} | {{ order.created }}: {{ order.book.title }} ( {{ order.book.author.name }}
-                {{ order.book.author.surname }}) - {{ order.book.price }} PLN</li>
+          <li><a href="{{ url_for('main.order_detail', order_id=order.id) }}">
+          {{ order.order_number }} | {{ order.created }} | Paid: {{ order.paid }} | Send: {{ order.send }}</a></li>
         {% endfor %}
       </div>
     </div>
