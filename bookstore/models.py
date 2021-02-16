@@ -29,7 +29,7 @@ class Book(db.Model):
     description = db.Column(db.String(length=5000))
     cover = db.Column(db.String(length=256))
     created = db.Column(db.DateTime, default=datetime.utcnow)
-    order = relationship('Order', back_populates='book')
+    order_items = relationship('OrderItems', back_populates='book')
 
 
 class Author(db.Model):
@@ -55,6 +55,7 @@ class User(UserMixin, db.Model):
     active = db.Column(db.Boolean, default=True)
     personal_data = relationship('PersonalData', back_populates='user')
     order = relationship('Order', back_populates='user')
+    order_items = relationship('OrderItems', back_populates='user')
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
 
@@ -68,15 +69,27 @@ class Role(RoleMixin, db.Model):
         return self.name
 
 
+class OrderItems(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = relationship('User', back_populates='order_items')
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+    book = relationship('Book', back_populates='order_items')
+    created = db.Column(db.DateTime, default=datetime.utcnow)
+    cart = db.Column(db.Boolean, default=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
+    order = relationship('Order', back_populates='order_items')
+
+
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_number = db.Column(db.String(length=12), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User', back_populates='order')
-    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
-    book = relationship('Book', back_populates='order')
     created = db.Column(db.DateTime, default=datetime.utcnow)
-    status = db.Column(db.String(length=128), nullable=False)
+    paid = db.Column(db.Boolean, default=False)
+    send = db.Column(db.Boolean, default=False)
+    order_items = relationship('OrderItems', back_populates='order')
 
 
 class PersonalData(db.Model):
