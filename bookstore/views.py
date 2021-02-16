@@ -365,3 +365,8 @@ def make_order(order_id):
                'order': models.Order.query.get(order_id)}
     return render_template('make_order.html', **context)
 
+
+@main_blueprint.route('/order/detail/<order_id>', methods=['GET'])
+def order_detail(order_id):
+    context = {'detail': models.OrderItems.query.filter_by(user_id=current_user.id, order_id=order_id)}
+    return render_template('order_detail.html', **context)
