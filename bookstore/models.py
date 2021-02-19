@@ -2,6 +2,7 @@ from datetime import datetime
 
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import RoleMixin, UserMixin
@@ -103,5 +104,9 @@ class PersonalData(db.Model):
     user = relationship('User', back_populates='personal_data')
 
 
-engine = create_engine('sqlite:///db.sqlite3')
+engine = create_engine('sqlite:///db.sqlite3',
+                       connect_args={"check_same_thread": False})
 Session = sessionmaker(autoflush=False, bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
