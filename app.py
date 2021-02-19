@@ -4,13 +4,17 @@ from flask_migrate import Migrate
 from flask_uploads import configure_uploads
 import click
 from click_params import EMAIL
+from fastapi import FastAPI
+from fastapi.middleware.wsgi import WSGIMiddleware
+import uvicorn
 
 from bookstore.views import main_blueprint, login_manager, admin, create_superuser, images
 from bookstore.models import db
+from fast_api.rest import routeapi
 
 app = Flask(__name__)
 app.register_blueprint(main_blueprint)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3' # 'mysql+mysqlconnector://root:root@localhost/flask_task' # 'sqlite:///db.sqlite3'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'Fnioz1Cnl2grWSA2MLEbCrBuJjJK0ELB'
 app.config['UPLOADED_IMAGES_DEST'] = 'static/media'
@@ -20,6 +24,10 @@ Migrate(app, db)
 Bootstrap(app)
 login_manager.init_app(app)
 configure_uploads(app, images)
+
+fast_app = FastAPI()
+fast_app.include_router(routeapi)
+fast_app.mount("/", WSGIMiddleware(app))
 
 _CREATE_SUPERUSER_HELP = (
     'Create superuser account.'
@@ -35,5 +43,5 @@ def create_superuser_command(username, email, password):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    uvicorn.run("app:fast_app")
 
