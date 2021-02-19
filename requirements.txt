@@ -13,3 +13,5 @@ flask-admin==1.5.7
 email_validator==1.1.2
 werkzeug==0.16.0
 flask-uploads==0.2.1
+fastapi==0.63.0
+uvicorn==0.13.3
