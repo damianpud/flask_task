@@ -1,3 +1,5 @@
+from os import environ as E
+
 from datetime import datetime
 
 from sqlalchemy.orm import relationship, sessionmaker
@@ -104,8 +106,12 @@ class PersonalData(db.Model):
     user = relationship('User', back_populates='personal_data')
 
 
-engine = create_engine('sqlite:///db.sqlite3',
-                       connect_args={"check_same_thread": False})
+DB_CONFIG = {
+    key: E[f'DB{key}'] for key in ['SCHEMA', 'USER', 'PASS', 'HOST', 'PORT']
+}
+DB_URI_TEMPLATE = '{SCHEMA}://{USER}:{PASS}@{HOST}:{PORT}'
+
+engine = create_engine(DB_URI_TEMPLATE.format(**DB_CONFIG))
 Session = sessionmaker(autoflush=False, bind=engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
