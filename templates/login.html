@@ -20,13 +20,12 @@
         {{ form.password.label }}
         <input
         class="form-control{% if form.password.errors %} is-invalid{% endif %}"
-        name="password" id="password" value="{{ form.password.data or '' }}"
+        name="password" id="password" type="password" value="{{ form.password.data or '' }}"
         >
         {% for error in form.password.errors %}
         <div class="invalid-feedback">{{ error }}</div>
         {% endfor %}
       </div>
-
       <input type="submit" class="btn btn-primary" name="Add">
 
       <a class="btn btn-success" type="button" href="{{ url_for('main.register') }}">Sign Up</a>
